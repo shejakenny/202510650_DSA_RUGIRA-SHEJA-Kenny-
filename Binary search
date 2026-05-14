@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm> // Required for sorting
+
+struct FamilyMember {
+    std::string name;
+    int age;
+};
+
+// Comparator function to sort family members by name
+bool compareNames(const FamilyMember& a, const FamilyMember& b) {
+    return a.name < b.name;
+}
+
+int main() {
+    int count;
+    std::cout << "How many family members would you like to enter? ";
+    std::cin >> count;
+
+    std::vector<FamilyMember> family(count);
+
+    // Data Input
+    for (int i = 0; i < count; ++i) {
+        std::cout << "Enter name for member " << i + 1 << ": ";
+        std::cin >> family[i].name;
+        std::cout << "Enter age for " << family[i].name << ": ";
+        std::cin >> family[i].age;
+    }
+
+    // Binary Search REQUIREMENT: The list must be sorted by the key we are searching for (name)
+    std::sort(family.begin(), family.end(), compareNames);
+
+    std::string searchKey;
+    std::cout << "\nEnter a key name to be searched: ";
+    std::cin >> searchKey;
+
+    // Binary Search Logic
+    int low = 0;
+    int high = count - 1;
+    int foundIndex = -1;
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (family[mid].name == searchKey) {
+            foundIndex = mid;
+            break; // Target found
+        }
+        if (family[mid].name < searchKey) {
+            low = mid + 1; // Search right half
+        } else {
+            high = mid - 1; // Search left half
+        }
+    }
+
+    // Output results as specified in 772654f9-ba36-43ec-97ab-0dfdd3ac97ef
+    if (foundIndex != -1) {
+        std::cout << family[foundIndex].name << " was found and is aged " 
+                  << family[foundIndex].age << " age." << std::endl;
+    } else {
+        std::cout << "Not found" << std::endl;
+    }
+
+    return 0;
+}
